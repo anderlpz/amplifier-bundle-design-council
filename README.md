@@ -2,6 +2,8 @@
 
 A multi-perspective design evaluation system with 7 orthogonal lenses that independently evaluate designs, debate to consensus, and produce synthesized verdicts with recorded dissent. Built on the proven `/council` pattern from [amplifier-bundle-skills](https://github.com/microsoft/amplifier-bundle-skills).
 
+![Design Council Workflow](docs/design-council-workflow.png)
+
 ## The Seven Lenses
 
 | Lens | Load-Bearing Question |
