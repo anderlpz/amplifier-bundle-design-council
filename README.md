@@ -4,6 +4,23 @@ A multi-perspective design evaluation system with 7 orthogonal lenses that indep
 
 ![Design Council Workflow](docs/design-council-workflow.png)
 
+## Installation
+
+```bash
+# Add the bundle
+amplifier bundle add git+https://github.com/anderlpz/amplifier-bundle-design-council@main
+
+# Activate it
+amplifier bundle use design-council
+```
+
+Or include it in your own bundle's `bundle.md`:
+
+```yaml
+includes:
+  - bundle: git+https://github.com/anderlpz/amplifier-bundle-design-council@main
+```
+
 ## The Seven Lenses
 
 | Lens | Load-Bearing Question |
@@ -17,12 +34,6 @@ A multi-perspective design evaluation system with 7 orthogonal lenses that indep
 | **emotion-reader** | Does this make someone feel something, or is it technically correct but hollow? |
 
 ## Usage
-
-Install the bundle:
-
-```
-amplifier bundle use amplifier-bundle-design-council
-```
 
 Convene the council on a design target (a URL, file path, screenshot, DOM Intelligence Package, or self-contained description):
 
