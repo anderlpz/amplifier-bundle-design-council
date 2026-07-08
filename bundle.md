@@ -1,15 +1,26 @@
 ---
 bundle:
   name: design-council
-  version: 0.1.0
+  version: 0.1.1
   description: The Design Intelligence Council — seven orthogonal design-evaluation lenses plus a /design-council orchestrator that runs cold fan-out, debate-to-consensus, and synthesized verdict with recorded dissent.
 
 includes:
   - bundle: git+https://github.com/microsoft/amplifier-bundle-skills@main
 
-skills:
-  dirs:
-    - ./skills
+# NOTE: a top-level `skills: dirs: [...]` key is NOT part of the bundle schema
+# and is silently ignored by amplifier-foundation's Bundle.from_dict (it only
+# reads name/version/description/includes/namespace_root/session/providers/
+# tools/hooks/spawn/agents/context). Registering this bundle's ./skills
+# directory with the skills system requires configuring the tool-skills
+# module directly, as below — mirroring the pattern used by
+# amplifier-bundle-skills' own behaviors/skills.yaml and
+# amplifier-bundle-design-intelligence-enhanced's behaviors/design-skills.yaml.
+tools:
+  - module: tool-skills
+    source: git+https://github.com/microsoft/amplifier-bundle-skills@main#subdirectory=modules/tool-skills
+    config:
+      skills:
+        - "@design-council:skills"
 ---
 
 # Design Intelligence Council

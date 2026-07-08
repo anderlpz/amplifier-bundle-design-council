@@ -13,7 +13,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from validate_bundle import EXPECTED_SKILLS, validate_skills  # noqa: E402  # pyright: ignore[reportMissingImports]
+from validate_bundle import (  # noqa: E402  # pyright: ignore[reportMissingImports]
+    EXPECTED_SKILLS,
+    validate_skills,
+    validate_skills_tool_wiring,
+)
 
 BUNDLE_ROOT = Path(__file__).resolve().parent.parent
 SKILLS_DIR = BUNDLE_ROOT / "skills"
@@ -30,6 +34,25 @@ class TestBundleValidation(unittest.TestCase):
 
     def test_expected_skill_set_is_exactly_eight(self):
         self.assertEqual(len(EXPECTED_SKILLS), 8)
+
+    def test_skills_are_wired_into_tool_skills_module(self):
+        """Regression test for the /design-council discoverability bug.
+
+        A bundle.md `skills: dirs: [...]` block validates fine (every SKILL.md
+        has correct frontmatter) but is completely inert -- amplifier-foundation's
+        Bundle.from_dict never reads a top-level 'skills' key. Skills on disk
+        with perfect frontmatter were invisible to the skills system and
+        `/design-council` was never registered as a command because nothing
+        told the tool-skills module to discover this bundle's ./skills
+        directory. This test fails if that wiring regresses.
+        """
+        errors = validate_skills_tool_wiring(BUNDLE_ROOT)
+        self.assertEqual(
+            errors,
+            [],
+            "Expected bundle.md to wire ./skills into tool-skills, got:\n"
+            + "\n".join(errors),
+        )
 
 
 if __name__ == "__main__":

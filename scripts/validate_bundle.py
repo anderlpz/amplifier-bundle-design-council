@@ -2,6 +2,15 @@
 """Validate that every skill in the design-council bundle loads with valid
 frontmatter and that each skill's `name` field matches its directory name.
 
+Also validates that bundle.md actually wires the bundle's ./skills directory
+into the tool-skills module's discovery config. A bundle.md `skills: dirs:
+[...]` block is NOT part of the amplifier-foundation bundle schema (only
+name/version/description/includes/namespace_root/session/providers/tools/
+hooks/spawn/agents/context are read) and is silently ignored -- skills on
+disk with valid frontmatter can still be completely invisible to the skills
+system if this wiring is missing. See amplifier-bundle-skills' own
+behaviors/skills.yaml for the canonical pattern.
+
 Usage:
     python3 scripts/validate_bundle.py
 
@@ -24,6 +33,82 @@ EXPECTED_SKILLS = [
     "emotion-reader",
     "design-council",
 ]
+
+
+def parse_bundle_frontmatter(bundle_md_path: Path) -> dict:
+    """Parse the YAML frontmatter block out of bundle.md.
+
+    Raises ValueError if the frontmatter block is missing or malformed.
+    """
+    text = bundle_md_path.read_text(encoding="utf-8")
+    parts = text.split("---")
+    if len(parts) < 3 or parts[0].strip() != "":
+        raise ValueError(f"{bundle_md_path}: missing frontmatter block")
+
+    frontmatter = yaml.safe_load(parts[1])
+    if not isinstance(frontmatter, dict):
+        raise ValueError(f"{bundle_md_path}: frontmatter did not parse to a dict")
+    return frontmatter
+
+
+def validate_skills_tool_wiring(bundle_root: Path) -> list[str]:
+    """Validate bundle.md wires this bundle's skills into the tool-skills module.
+
+    Returns a list of error strings; empty means the wiring is present and correct.
+    """
+    errors: list[str] = []
+    bundle_md_path = bundle_root / "bundle.md"
+
+    try:
+        frontmatter = parse_bundle_frontmatter(bundle_md_path)
+    except ValueError as exc:
+        return [str(exc)]
+
+    bundle_name = frontmatter.get("bundle", {}).get("name", "")
+
+    # Reject the dead `skills: dirs: [...]` key outright -- it does nothing
+    # and its mere presence is a strong signal the wiring bug has regressed.
+    if "skills" in frontmatter:
+        errors.append(
+            "bundle.md: top-level 'skills:' key is not part of the bundle "
+            "schema and is silently ignored -- it must not be used to "
+            "register skill directories. Use 'tools: [{module: tool-skills, "
+            "config: {skills: [...]}}]' instead."
+        )
+
+    tools = frontmatter.get("tools", [])
+    if not isinstance(tools, list):
+        errors.append("bundle.md: 'tools' must be a list")
+        return errors
+
+    tool_skills_entries = [
+        t for t in tools if isinstance(t, dict) and t.get("module") == "tool-skills"
+    ]
+    if not tool_skills_entries:
+        errors.append(
+            "bundle.md: no 'tools' entry configures the 'tool-skills' module "
+            "-- this bundle's ./skills directory will never be discovered"
+        )
+        return errors
+
+    expected_ref_suffixes = (f"@{bundle_name}:skills", "subdirectory=skills")
+    found = False
+    for entry in tool_skills_entries:
+        skills_refs = entry.get("config", {}).get("skills", [])
+        for ref in skills_refs:
+            if isinstance(ref, str) and any(
+                suffix in ref for suffix in expected_ref_suffixes
+            ):
+                found = True
+
+    if not found:
+        errors.append(
+            "bundle.md: tool-skills module config.skills does not reference "
+            f"this bundle's own skills directory (expected an entry like "
+            f"'@{bundle_name}:skills')"
+        )
+
+    return errors
 
 
 def validate_skills(skills_dir: Path, expected_skills: list[str]) -> list[str]:
