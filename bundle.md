@@ -6,21 +6,7 @@ bundle:
 
 includes:
   - bundle: git+https://github.com/microsoft/amplifier-bundle-skills@main
-
-# NOTE: a top-level `skills: dirs: [...]` key is NOT part of the bundle schema
-# and is silently ignored by amplifier-foundation's Bundle.from_dict (it only
-# reads name/version/description/includes/namespace_root/session/providers/
-# tools/hooks/spawn/agents/context). Registering this bundle's ./skills
-# directory with the skills system requires configuring the tool-skills
-# module directly, as below — mirroring the pattern used by
-# amplifier-bundle-skills' own behaviors/skills.yaml and
-# amplifier-bundle-design-intelligence-enhanced's behaviors/design-skills.yaml.
-tools:
-  - module: tool-skills
-    source: git+https://github.com/microsoft/amplifier-bundle-skills@main#subdirectory=modules/tool-skills
-    config:
-      skills:
-        - "@design-council:skills"
+  - bundle: design-council:behaviors/design-council
 ---
 
 # Design Intelligence Council

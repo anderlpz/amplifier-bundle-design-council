@@ -32,6 +32,7 @@ EXPECTED_SKILLS = [
     "purpose-keeper",
     "emotion-reader",
     "design-council",
+    "design-council-here",
 ]
 
 
@@ -51,8 +52,26 @@ def parse_bundle_frontmatter(bundle_md_path: Path) -> dict:
     return frontmatter
 
 
+def _check_tools_for_skills_ref(tools: list, bundle_name: str) -> bool:
+    """Return True if a tools list contains a tool-skills entry referencing this bundle."""
+    expected_ref_suffixes = (f"@{bundle_name}:skills", "subdirectory=skills")
+    for entry in tools:
+        if not isinstance(entry, dict) or entry.get("module") != "tool-skills":
+            continue
+        skills_refs = entry.get("config", {}).get("skills", [])
+        for ref in skills_refs:
+            if isinstance(ref, str) and any(
+                suffix in ref for suffix in expected_ref_suffixes
+            ):
+                return True
+    return False
+
+
 def validate_skills_tool_wiring(bundle_root: Path) -> list[str]:
-    """Validate bundle.md wires this bundle's skills into the tool-skills module.
+    """Validate the bundle wires its skills into the tool-skills module.
+
+    Checks both bundle.md (direct tools config) and any included behavior
+    YAML files for the tool-skills wiring.
 
     Returns a list of error strings; empty means the wiring is present and correct.
     """
@@ -76,38 +95,47 @@ def validate_skills_tool_wiring(bundle_root: Path) -> list[str]:
             "config: {skills: [...]}}]' instead."
         )
 
+    # Check 1: direct tools wiring in bundle.md
     tools = frontmatter.get("tools", [])
-    if not isinstance(tools, list):
-        errors.append("bundle.md: 'tools' must be a list")
+    if isinstance(tools, list) and _check_tools_for_skills_ref(tools, bundle_name):
         return errors
 
-    tool_skills_entries = [
-        t for t in tools if isinstance(t, dict) and t.get("module") == "tool-skills"
-    ]
-    if not tool_skills_entries:
-        errors.append(
-            "bundle.md: no 'tools' entry configures the 'tool-skills' module "
-            "-- this bundle's ./skills directory will never be discovered"
-        )
-        return errors
+    # Check 2: wiring via an included behavior YAML
+    includes = frontmatter.get("includes", [])
+    if isinstance(includes, list):
+        for inc in includes:
+            if not isinstance(inc, dict):
+                continue
+            bundle_ref = inc.get("bundle", "")
+            if not isinstance(bundle_ref, str):
+                continue
+            # Match local behavior references like "design-council:behaviors/..."
+            if bundle_ref.startswith(f"{bundle_name}:behaviors/"):
+                behavior_rel = bundle_ref.split(":", 1)[1]
+                behavior_path = bundle_root / f"{behavior_rel}.yaml"
+                if behavior_path.exists():
+                    try:
+                        btext = behavior_path.read_text(encoding="utf-8")
+                        # Handle both plain YAML and ---frontmatter--- format
+                        bparts = btext.split("---")
+                        if len(bparts) >= 3 and bparts[0].strip() == "":
+                            behavior_yaml = yaml.safe_load(bparts[1])
+                        else:
+                            behavior_yaml = yaml.safe_load(btext)
+                    except (yaml.YAMLError, ValueError):
+                        continue
+                    if isinstance(behavior_yaml, dict):
+                        b_tools = behavior_yaml.get("tools", [])
+                        if isinstance(b_tools, list) and _check_tools_for_skills_ref(
+                            b_tools, bundle_name
+                        ):
+                            return errors
 
-    expected_ref_suffixes = (f"@{bundle_name}:skills", "subdirectory=skills")
-    found = False
-    for entry in tool_skills_entries:
-        skills_refs = entry.get("config", {}).get("skills", [])
-        for ref in skills_refs:
-            if isinstance(ref, str) and any(
-                suffix in ref for suffix in expected_ref_suffixes
-            ):
-                found = True
-
-    if not found:
-        errors.append(
-            "bundle.md: tool-skills module config.skills does not reference "
-            f"this bundle's own skills directory (expected an entry like "
-            f"'@{bundle_name}:skills')"
-        )
-
+    errors.append(
+        f"Neither bundle.md nor any included behavior YAML wires the "
+        f"tool-skills module with this bundle's skills directory "
+        f"(expected an entry like '@{bundle_name}:skills')"
+    )
     return errors
 
 

@@ -32,8 +32,8 @@ class TestBundleValidation(unittest.TestCase):
             "Expected no validation errors, got:\n" + "\n".join(errors),
         )
 
-    def test_expected_skill_set_is_exactly_eight(self):
-        self.assertEqual(len(EXPECTED_SKILLS), 8)
+    def test_expected_skill_set_is_exactly_nine(self):
+        self.assertEqual(len(EXPECTED_SKILLS), 9)
 
     def test_skills_are_wired_into_tool_skills_module(self):
         """Regression test for the /design-council discoverability bug.

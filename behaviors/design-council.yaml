@@ -1,0 +1,17 @@
+---
+bundle:
+  name: design-council
+  version: 0.1.1
+  description: "Design Intelligence Council — 7 orthogonal design evaluation lenses"
+
+tools:
+  - module: tool-skills
+    source: git+https://github.com/microsoft/amplifier-bundle-skills@main#subdirectory=modules/tool-skills
+    config:
+      skills:
+        - "@design-council:skills"
+
+context:
+  include:
+    - design-council:context/design-council-awareness.md
+---

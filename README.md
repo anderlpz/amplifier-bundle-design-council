@@ -6,17 +6,18 @@ A multi-perspective design evaluation system with 7 orthogonal lenses that indep
 
 ## Installation
 
+**As your primary bundle:**
+
 ```bash
-amplifier bundle add git+https://github.com/anderlpz/amplifier-bundle-design-council@master --app
+amplifier bundle add git+https://github.com/anderlpz/amplifier-bundle-design-council@main
+amplifier bundle use design-council
 ```
 
-This installs the Design Council as an app-level bundle, making its skills available in every session regardless of which primary bundle you use.
-
-To include it in your own bundle instead:
+**Compose into your own bundle** (recommended — add design council capabilities to your existing setup):
 
 ```yaml
 includes:
-  - bundle: git+https://github.com/anderlpz/amplifier-bundle-design-council@master
+  - bundle: git+https://github.com/anderlpz/amplifier-bundle-design-council@main#behaviors/design-council
 ```
 
 ## The Seven Lenses
@@ -58,6 +59,8 @@ Convene the council on the design you're currently building in this session:
 ```
 amplifier-bundle-design-council/
 ├── bundle.md                          # Bundle manifest and description
+├── behaviors/
+│   └── design-council.yaml           # Composable behavior for bundle includes
 ├── context/
 │   └── design-council-awareness.md    # Grounding context for all lenses
 ├── docs/
