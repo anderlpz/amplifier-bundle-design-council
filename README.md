@@ -7,18 +7,16 @@ A multi-perspective design evaluation system with 7 orthogonal lenses that indep
 ## Installation
 
 ```bash
-# Add the bundle
-amplifier bundle add git+https://github.com/anderlpz/amplifier-bundle-design-council@main
-
-# Activate it
-amplifier bundle use design-council
+amplifier bundle add git+https://github.com/anderlpz/amplifier-bundle-design-council@master --app
 ```
 
-Or include it in your own bundle's `bundle.md`:
+This installs the Design Council as an app-level bundle, making its skills available in every session regardless of which primary bundle you use.
+
+To include it in your own bundle instead:
 
 ```yaml
 includes:
-  - bundle: git+https://github.com/anderlpz/amplifier-bundle-design-council@main
+  - bundle: git+https://github.com/anderlpz/amplifier-bundle-design-council@master
 ```
 
 ## The Seven Lenses
