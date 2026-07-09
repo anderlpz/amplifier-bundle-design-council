@@ -6,14 +6,15 @@ A multi-perspective design evaluation system with 7 orthogonal lenses that indep
 
 ## Installation
 
-**As your primary bundle:**
+Add the Design Council behavior to your bundle:
 
 ```bash
-amplifier bundle add git+https://github.com/anderlpz/amplifier-bundle-design-council@main
-amplifier bundle use design-council
+amplifier bundle add git+https://github.com/anderlpz/amplifier-bundle-design-council@main#behaviors/design-council --app
 ```
 
-**Compose into your own bundle** (recommended — add design council capabilities to your existing setup):
+This installs only the behavior (skills + awareness context) at the app level — no foundation dependency, no context bloat.
+
+Then compose it into your bundle's `bundle.md`:
 
 ```yaml
 includes:
