@@ -1,4 +1,3 @@
----
 bundle:
   name: design-council
   version: 0.1.1
@@ -14,4 +13,3 @@ tools:
 context:
   include:
     - design-council:context/design-council-awareness.md
----
