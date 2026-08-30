@@ -1,6 +1,6 @@
 ---
 name: design-council-here
-description: "Convene the Design Intelligence Council on the CURRENT design under discussion — the mockup, component, or interface we've been building in this session. The INLINE counterpart to /design-council (which forks and runs isolated, so it cannot see the chat)."
+description: "Convene the Design Intelligence Council on the CURRENT design in this session — the mockup, component, or interface we've been building. The INLINE counterpart to /design-council, which forks and runs isolated, so it cannot see the chat."
 disable-model-invocation: true
 user-invocable: true
 model_role: critique
