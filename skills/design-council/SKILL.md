@@ -1,6 +1,6 @@
 ---
 name: design-council
-description: "Convene the Design Intelligence Council (seven orthogonal design lenses) on a design target — cold independent fan-out, debate-to-consensus, synthesized verdict with recorded dissent and a roster manifest."
+description: "Convene the Design Intelligence Council — seven orthogonal design lenses — on a design target. Cold independent fan-out, debate-to-consensus, synthesized verdict with recorded dissent and roster manifest."
 context: fork
 disable-model-invocation: true
 user-invocable: true
