@@ -8,6 +8,8 @@ description: >-
   small phone, in bright sun, on a slow connection, in a moving car, at 200%
   font. Any checkpoint — concept, mockup, component, finished screen. Not a
   responsiveness checklist.
+visibility:
+  priority: 5
 user-invocable: true
 shortcut: CT
 model_role: critique

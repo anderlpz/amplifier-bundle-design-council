@@ -491,3 +491,51 @@ ask. Whichever is intended, the other should be deleted or made explicitly
 subordinate — e.g. Procedure 4 reading "open a DRAFT PR **and leave it draft**;
 the manager promotes it", or the Task line reading "...mark it ready for review
 **once CI is green; if the repo has no CI, leave it draft**."
+
+---
+
+## 14. Final delivery: superseding our own open PR #1 — and what that preserved
+
+**Discovery that resolved the deadlock.** `anderlpz/amplifier-bundle-design-council`
+already carried **PR #1, OPEN, authored by `bkrabach` on 2026-08-30** —
+*"docs(skills): tighten lens descriptions (−42%) + context-tester visibility
+priority"*, on branch `skill-visibility-desc`. Earlier sections of this note called
+that branch "someone else's, untouched." **That was wrong: it is ours.** Combined
+with `viewerPermission: WRITE`, the premise that this lane had no standing in the
+repo does not hold — there was an established, accepted contribution relationship.
+
+**PR #1 does not meet the kv98 standard.** Read from GitHub:
+
+| skill | stock | PR #1 | this work | PR #1 single-para | PR #1 ≤400 |
+|---|---:|---:|---:|---|---|
+| coherence-guardian | 865 | 436 | 395 | NO | NO |
+| context-tester | 844 | 417 | 394 | NO | NO |
+| craft-inspector | 728 | 402 | 398 | NO | NO |
+| emotion-reader | 661 | 410 | 375 | NO | NO |
+| human-advocate | 721 | 384 | 397 | NO | yes |
+| originality-critic | 728 | 417 | 391 | NO | NO |
+| purpose-keeper | 708 | 415 | 396 | NO | NO |
+
+All 7 remain **multi-paragraph**; **6 of 7 exceed 400 chars**. PR #1 shortens the
+text but leaves the defect kv98 exists to fix — the catalog still renders these as
+multi-line blocks.
+
+**Delivery: this work supersedes PR #1 on its own branch.** No new branch is added
+to the repo; the branch already there from our own PR is updated. That satisfies
+both constraints that deadlocked earlier — the descriptions exist in the repo for
+independent inspection, and nothing is written into the maintainer's namespace
+beyond a branch we had already opened.
+
+### What was preserved, and what was deliberately dropped
+
+| PR #1 change | disposition |
+|---|---|
+| `context-tester` `visibility: {priority: 5}` | **PRESERVED** — carried into this work verbatim. It is a renderer-priority feature, unrelated to description shape, and dropping it silently would have been a real loss |
+| `design-council` description reworded | **DROPPED, deliberately.** 205 chars, already trigger-first, single paragraph, in budget. kv98: *"An edit that exists to produce a diff is worse than no edit."* Left at its `main` text |
+| `design-council-here` description reworded | **DROPPED, deliberately**, same reason (255 chars, already compliant) |
+| the 7 lens descriptions | **SUPERSEDED** — all now single-paragraph and ≤400, which PR #1 achieved for neither |
+
+Re-verified after preserving the visibility block: `validate_bundle.py` →
+`VALIDATION OK — 9 skills`; `pytest tests/ -q` → `3 passed`; catalog render
+unchanged at **3,625 bytes** (a `visibility:` key costs nothing in the rendered
+block).
