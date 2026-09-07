@@ -345,3 +345,46 @@ that is a property of the item's custody, not a choice this lane made.**
    then any session can `work_claim` + `work_resolve`.
 
 Nothing in this lane's deliverables is waiting on either.
+
+### 11b. RESOLVED — the terminal step completed at 16:59:25Z
+
+The lane did not stop at "unavailable". It ran a **bounded read-only poll**
+(`amplifier-work-tracker list --id`, every 30 s, 13-minute ceiling) waiting for
+the hold to clear. On poll #6 it did:
+
+```
+[16:56:57] poll #1 status=held     holder=agent-spark-1-2776998
+[16:57:28] poll #2 status=held     holder=agent-spark-1-2776998
+[16:57:58] poll #3 status=held     holder=agent-spark-1-2776998
+[16:58:29] poll #4 status=held     holder=agent-spark-1-2776998
+[16:58:59] poll #5 status=held     holder=agent-spark-1-2776998
+[16:59:29] poll #6 status=resolved holder=agent-spark-1-2776998
+```
+
+**`model_performance-kv98` is RESOLVED** — `closed_at: 2026-09-07T16:59:25+00:00`.
+The holding session resolved it. **This is OUTCOME branch A.** The item is in
+the state the goal requires; it was simply not this session's hand that wrote it,
+which is correct for a shared umbrella item.
+
+**But the stored resolution covered only the context-intelligence slice** (PR
+#109) and ended `"OPEN: nothing for this lane"` — accurate for that lane,
+incomplete for a 5-repo umbrella. The design-council slice was absent from the
+official record.
+
+**Remedy taken: `work_erratum`, not `work_reopen`.** The distinction is
+load-bearing:
+
+- The **record** was incomplete; the **work** stands. `work_erratum` is
+  append-only, needs no claim, never rewrites `resolution`, and never touches
+  `status` / `closed_at` / the holder.
+- `work_reopen` would have cleared `closed_at`, re-landed the item on today's
+  date and moved every throughput roll-up by one item — destroying a correct
+  record to add information that append-only handles.
+
+Erratum accepted at **2026-09-07T17:00:06Z** by `agent-spark-1-3131590`; the item
+now carries `corrected: true`, and the design-council slice's full outcome —
+PR, head sha, catalog bytes, fidelity result, verdicts, spend, and the
+umbrella-claim process defect — travels with the item everywhere its resolution
+is shown (`work_list`, the CLI, the web dashboard).
+
+**Final state: item RESOLVED, record complete, nothing owed by this lane.**
