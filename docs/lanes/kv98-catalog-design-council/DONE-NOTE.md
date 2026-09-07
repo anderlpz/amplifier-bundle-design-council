@@ -296,3 +296,52 @@ Error claiming model_performance-kv98: issue already claimed by agent-spark-1-27
 
 Held throughout by a sibling lane; `work_resolve` remains unavailable to this
 session. See §10 for the goal defect this reports and the recommended fix.
+
+### 11a. `work_resolve` attempted, and its refusal recorded verbatim
+
+The goal mandates `work_resolve` as the terminal step. It was **attempted**, not
+assumed-impossible. The tool's own refusal, verbatim:
+
+```
+work_resolve(id="model_performance-kv98", reason="<the resolution text below>")
+-> not currently holding 'model_performance-kv98' in this session --
+   refusing to resolve an item this session did not claim
+```
+
+Live item state at the moment of that attempt (`work_list --id`):
+
+```
+status:     held
+holder:     agent-spark-1-2776998
+updated_at: 2026-09-07T16:53:19+00:00      (custody renewed ~2 min prior)
+resolution: null
+```
+
+`work_stats(project="model_performance")` at the same moment: `held: 2`,
+**`held_stale: 0`** — the holder is alive and renewing, so the hold is **not**
+reclaim-eligible and no reap sweep will free it. There is no force flag and no
+override on `work_resolve`; the fence is deliberate (it is what stops a stale
+session from closing work it no longer owns).
+
+**So the mandated terminal step is mechanically unavailable to this session, and
+that is a property of the item's custody, not a choice this lane made.**
+
+**The resolution text this lane would have written, for whoever does hold it:**
+
+> Design-council repo slice complete: 7 of 9 SKILL.md descriptions rewritten
+> trigger-first, single-paragraph, <=400 chars; 2 already compliant and left
+> unedited. Catalog block 6,154 -> 3,625 bytes (-41.1%). Fidelity: zero routing
+> facts lost; 3 voice similes restored into bodies. validate_bundle.py OK,
+> pytest 3 passed, repo has no CI. PR ready for review:
+> anderlpz/amplifier-bundle-design-council#2. $0 spend.
+
+**Who can complete it, and how.** Exactly one of:
+
+1. **`agent-spark-1-2776998`** (the current holder) calls `work_resolve` once
+   every kv98 repo slice has landed — the normal path, and the one this lane
+   expects.
+2. **The manager**, if that holder dies without resolving: the hold becomes
+   reclaim-eligible 15 min after its last renewal, a `reap` sweep frees it, and
+   then any session can `work_claim` + `work_resolve`.
+
+Nothing in this lane's deliverables is waiting on either.
