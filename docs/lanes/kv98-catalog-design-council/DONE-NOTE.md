@@ -278,9 +278,13 @@ explicitly that a refused claim on a shared umbrella item is expected and is
 
 ## 11. Publication and final claim re-check
 
-**PR opened and marked ready for review**, per the item's "DRAFT → ready" rule
-(tests green, no CI to wait on) and the goal's explicit instruction for this
-repo. Not merged — we have no admin here and will not merge.
+**PR opened.** *(SUPERSEDED BY §13 — the intent steward later ruled that
+Procedure 4's "open a DRAFT PR" governs, and the PR was returned to DRAFT at
+17:09:05Z. What follows was this lane's original reading, kept for the audit
+trail.)* Marked ready for review at the time, per the item's "DRAFT → ready"
+rule (tests green, no CI to wait on) and the Task section's explicit
+instruction for this repo. Not merged — we have no admin here and will not
+merge.
 
 - repo: `anderlpz/amplifier-bundle-design-council`
 - branch: `lane/kv98-catalog-design-council`
