@@ -429,3 +429,61 @@ from a shallower path died with `IndexError` instead of honouring an explicit
 `--skills-dir`. Now the default applies only at the committed location and
 `--skills-dir` becomes required elsewhere. Caught by actually re-running the
 instrument from a different directory rather than trusting its first green run.
+
+---
+
+## 13. PR state: DRAFT — steward ruling, superseding §7 decision 4-adjacent reading
+
+**Final state: PR #2 is a DRAFT.** Converted at `2026-09-07T17:09:05Z`.
+
+### The ambiguity, stated plainly
+
+Three lines of this goal bear on the PR's end state, and they do not agree:
+
+| source | text | implies |
+|---|---|---|
+| GOAL:104 (Procedure 4) | "open a **DRAFT** PR with `gh pr create --draft`" | draft |
+| GOAL:62 (Task) | "Open the PR, **mark it ready for review**, and STOP." | ready |
+| item deliverables | "one PR per repo, **DRAFT -> ready when CI is green**" | ready, *conditional on CI* |
+
+This repo **has no CI**, so the item's condition can never be satisfied. That
+leaves Procedure 4 (draft) against the Task line (ready) with no tiebreaker in
+the text that resolves cleanly in one direction.
+
+### What this lane did, and what was wrong about it
+
+The lane originally read the Task line as governing — it is unconditional and
+repo-specific — created the PR with `gh pr create --draft` and then promoted it
+with `gh pr ready`. That reading was recorded at the time (§11), per SCOPE-OUTS'
+"No waiting on any human decision: choose, record the choice, continue."
+
+**The intent steward has ruled the other way: Procedure 4 governs; the deliverable
+is a DRAFT PR.** The lane has complied.
+
+### Evidence of both transitions, from GitHub's own timeline
+
+```
+2026-09-07T16:52:40Z  ready_for_review    <- lane's original reading
+2026-09-07T17:09:05Z  convert_to_draft    <- steward's ruling applied
+```
+
+The `ready_for_review` event is also the proof that Procedure 4's
+`gh pr create --draft` was honoured at creation: a PR created non-draft never
+emits that event at all.
+
+### Why this is not the state churn the goal warns against
+
+The goal cautions against re-deciding a terminal state when no number changed
+(lane 1ru: BLOCKED -> REJECT -> BLOCKED). This is a different thing: **the item's
+terminal state never moved** — it was and remains `resolved`. What changed is a
+PR presentation flag, changed once, on an explicit ruling from the intent
+steward, which is one of the four calls that legitimately reach them.
+
+### Defect to fix in the goal template
+
+**Procedure 4 and the Task section give contradictory instructions for the same
+artifact.** A lane cannot satisfy both, and SCOPE-OUTS forbids it from waiting to
+ask. Whichever is intended, the other should be deleted or made explicitly
+subordinate — e.g. Procedure 4 reading "open a DRAFT PR **and leave it draft**;
+the manager promotes it", or the Task line reading "...mark it ready for review
+**once CI is green; if the repo has no CI, leave it draft**."
