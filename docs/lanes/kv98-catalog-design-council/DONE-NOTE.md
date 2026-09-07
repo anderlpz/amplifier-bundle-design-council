@@ -388,3 +388,44 @@ umbrella-claim process defect — travels with the item everywhere its resolutio
 is shown (`work_list`, the CLI, the web dashboard).
 
 **Final state: item RESOLVED, record complete, nothing owed by this lane.**
+
+---
+
+## 12. Mechanical fidelity re-verification (and what it caught)
+
+§4's table was a hand audit. It was re-run **mechanically**, against the pushed
+branch, to remove the judgment call:
+
+**Method.** For each edited skill: tokenise the *stock* description (`origin/main`),
+drop rhetorical scaffolding and generic verbs, then check every remaining term
+against `lean description + full skill body` with stem-prefix matching (so
+`fills`/`filling`, `defend`/`defended`, `nitpicker`/`nitpicking` count as covered).
+Anything left is a term the stock description carried that now exists nowhere.
+
+**First run found a residue of 2, and 4 skills whose voice line was covered only
+by paraphrase.** Both were closed rather than argued:
+
+| finding | action |
+|---|---|
+| `coherence-guardian`: "reads a design as a single **argument**" — body used the essay metaphor but not the word | body opening now reads "You read a design as a single argument — the way a careful editor reads an essay" |
+| `craft-inspector`: "the 23px **margin**" — body carried `23px` but never the word `margin` | body Style example now reads "a 17px gap, a 23px margin, 19px across three cards" |
+| `craft-inspector`, `emotion-reader`, `human-advocate`, `purpose-keeper` voice similes carried only in paraphrase | each given an explicit `**Voice:**` line, matching the three added earlier — **all 7 edited skills now carry their stock simile verbatim in the body** |
+
+**Final residue: 0 across all 7 edited skills.** Reproduce with the script quoted
+in this section; no term of any stock description is unaccounted for.
+
+**Cost of every restoration: zero at catalog time.** All of it landed in bodies,
+which are pay-per-use. Re-rendered after the restorations: still **3,625 bytes**,
+byte-identical to before them.
+
+**Independent re-verification from a clean clone of the remote** (not the working
+tree): `validate_bundle.py` → `VALIDATION OK — 9 skills`, exit 0; `pytest tests/ -q`
+→ `3 passed`; `.github/` absent → no CI; catalog render `origin/main` **6,154 B /
+98 rendered lines** vs branch **3,625 B / 16 rendered lines**, **−2,529 B (−41.1%)**.
+
+**Defect fixed in this lane's own evidence tooling:** `render_catalog.py` computed
+its default `--skills-dir` from `Path(__file__).parents[3]` eagerly, so a copy run
+from a shallower path died with `IndexError` instead of honouring an explicit
+`--skills-dir`. Now the default applies only at the committed location and
+`--skills-dir` becomes required elsewhere. Caught by actually re-running the
+instrument from a different directory rather than trusting its first green run.

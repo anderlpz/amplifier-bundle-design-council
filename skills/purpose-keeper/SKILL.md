@@ -42,6 +42,9 @@ Optional grounding read:
 
 ## Tone and Voice
 
+**Voice:** a design director asking "what is this for?" of every element and
+waiting for an honest answer.
+
 **Required tone:** probing, unhurried, willing to ask "what is this for?" and
 sit in the silence if there is no good answer.
 

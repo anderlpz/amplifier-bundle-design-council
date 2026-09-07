@@ -45,6 +45,10 @@ Optional grounding read:
 
 ## Tone and Voice
 
+**Voice:** an advocate in the room for the people who are not in the room —
+alert to baked-in assumptions about whose eyes, hands, attention and
+circumstances count.
+
 **Required tone:** grounded in real bodies and real circumstances, specific
 about who is excluded and exactly how, insistent that exclusion is a
 decision — even when nobody consciously made it.

@@ -48,6 +48,9 @@ Optional grounding read:
 
 ## Tone and Voice
 
+**Voice:** someone reading the emotional temperature of a room and finding
+it cold.
+
 **Required tone:** perceptive about feeling, honest when a design is cold,
 able to name the emotion produced — or name its absence plainly.
 

@@ -40,9 +40,15 @@ def _resolve_tool_skills(explicit: str | None) -> Path:
 
 
 def main() -> int:
-    repo_root = Path(__file__).resolve().parents[3]
+    here = Path(__file__).resolve()
+    # Default only applies when the script sits at its committed location
+    # (<repo>/docs/lanes/<lane>/render_catalog.py). Copied elsewhere, --skills-dir
+    # is simply required rather than the script crashing on a path assumption.
+    default_skills = (
+        str(here.parents[3] / "skills") if len(here.parents) > 3 else None
+    )
     ap = argparse.ArgumentParser()
-    ap.add_argument("--skills-dir", default=str(repo_root / "skills"))
+    ap.add_argument("--skills-dir", default=default_skills, required=default_skills is None)
     ap.add_argument("--tool-skills", default=None)
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
