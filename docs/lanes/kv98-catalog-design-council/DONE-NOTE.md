@@ -273,3 +273,26 @@ the merge is the manager's next stage.
 per-repo lanes, either (a) give each lane its own child item, or (b) say
 explicitly that a refused claim on a shared umbrella item is expected and is
 **not** branch C.
+
+---
+
+## 11. Publication and final claim re-check
+
+**PR opened and marked ready for review**, per the item's "DRAFT → ready" rule
+(tests green, no CI to wait on) and the goal's explicit instruction for this
+repo. Not merged — we have no admin here and will not merge.
+
+- repo: `anderlpz/amplifier-bundle-design-council`
+- branch: `lane/kv98-catalog-design-council`
+- PR: <https://github.com/anderlpz/amplifier-bundle-design-council/pull/2>
+- verified by remote read (`git ls-remote` + `gh pr list`), not from local state
+
+**Second `work_claim` attempt, after all deliverables were published**, verbatim:
+
+```
+claim model_performance-kv98 as 'agent-spark-1-3131590' failed:
+Error claiming model_performance-kv98: issue already claimed by agent-spark-1-2776998
+```
+
+Held throughout by a sibling lane; `work_resolve` remains unavailable to this
+session. See §10 for the goal defect this reports and the recommended fix.
