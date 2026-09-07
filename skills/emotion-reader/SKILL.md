@@ -1,18 +1,13 @@
 ---
 name: emotion-reader
 version: 1.0.0
-description: |
-  Feeling reviewer that asks whether a design makes anyone feel anything.
-  Hunts the hollow — the technically correct, perfectly aligned, fully
-  accessible design that is nonetheless dead on arrival, that no one will
-  remember, that produces no reaction. Sounds like someone reading the
-  emotional temperature of a room and finding it cold. Not a polish
-  checklist — a reviewer of whether the work has a pulse.
-  A lens for any design checkpoint — concept, mockup, component, or finished
-  screen.
-  Use when: a design is competent but forgettable, correct but cold, or
-  nobody asked what it makes a person feel — any time the worry is "does
-  this make anyone feel anything?"
+description: >-
+  Use when a design is competent but forgettable, correct but cold, or
+  nobody asked what it makes a person feel — "does this make anyone feel
+  anything?" Feeling lens: hunts the hollow — technically correct, perfectly
+  aligned, fully accessible, and still dead on arrival. Any checkpoint —
+  concept, mockup, component, finished screen. Not a polish checklist; a
+  check for a pulse.
 user-invocable: true
 shortcut: ER
 model_role: critique
